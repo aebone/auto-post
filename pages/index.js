@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { getAlbum } from '../pages/api/googlePhotos'
-
+import { getQuotes } from '../pages/api/quotes'
 
 export const getStaticProps = async () => {
   const album = await getAlbum(process.env.ALBUM_ID)
@@ -24,10 +24,20 @@ export const getStaticProps = async () => {
   }
 }
 
-const IndexPage = ({ images }) => (
-  <>
-    {images.map((image) => <img src={image.thumbnail}/>)}
-  </>
-)
+const IndexPage = ({ images }) => {
+  const [quote, setQuote] = useState(0);
+
+  useEffect(() => {
+    getQuotes('motivacao').then((response) => {
+      const randomIndex = Math.floor(Math.random() * (499 - 0))
+      setQuote(response.frases[randomIndex])
+    });
+  }, []);
+
+  return(<>
+    {images.map((image, index) => <img key={index} src={image.thumbnail}/>)}
+    <p>{quote.texto}</p>
+  </>)
+}
 
 export default IndexPage
