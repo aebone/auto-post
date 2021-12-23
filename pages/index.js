@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef} from 'react'
+import html2canvas from "html2canvas";
 
 import { getAlbum } from '../pages/api/googlePhotos'
 import { getQuotes } from '../pages/api/quotes'
@@ -22,6 +23,7 @@ export const getStaticProps = async () => {
 const IndexPage = ({ image }) => {
   const [quote, setQuote] = useState(0);
   const [position, setPosition] = useState(BOTTOM);
+  const frameRef = useRef();
 
   useEffect(() => {
     getQuotes().then((response) => {
@@ -38,8 +40,16 @@ const IndexPage = ({ image }) => {
     setPosition(BOTTOM);
   }
 
+  const onCapture = () => {
+      html2canvas(frameRef.current, {allowTaint: true}).then(function(canvas) {
+        document.body.appendChild(canvas);
+      });
+   }
+
+   console.log(frameRef);
+
   return(<>
-    <section className='frame'>
+    <section ref={frameRef} className='frame'>
       <img className='frame--image' src={image}/>
 
       <blockquote className={`frame--quote ${position}`}>
@@ -58,6 +68,8 @@ const IndexPage = ({ image }) => {
         <input type="radio" id="bottom" name="position" value="bottom" onClick={changePositionToBottom}/>
         <label htmlFor="bottom">Bottom</label>
       </div>
+
+      <button onClick={onCapture}>Download</button>
     </section>
   </>)
 }
