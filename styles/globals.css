@@ -14,6 +14,8 @@ body {
 .frame--image {
   width: 600px;
   height: 600px;
+  filter: brightness(100%);
+  filter: saturate(100%);
 }
 
 .frame--quote {
