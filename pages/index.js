@@ -3,40 +3,62 @@ import React, { useEffect, useState } from 'react'
 import { getAlbum } from '../pages/api/googlePhotos'
 import { getQuotes } from '../pages/api/quotes'
 
+const TOP = 'frame--quote-top '
+const BOTTOM = 'frame--quote-bottom '
+
 export const getStaticProps = async () => {
   const album = await getAlbum(process.env.ALBUM_ID)
-  const images = await Promise.all(
-    album.map(async (url) => {
-      console.log(url);
-      const original = url
-      const thumbnail = `${url}=w100`
-      return {
-        original,
-        thumbnail
-      }
-    })
-  )
+  const randomIndex = Math.floor(Math.random() * (album.length - 0))
+  
+  const image = album[randomIndex]
 
   return {
     props: {
-      images,
+      image
     }
   }
 }
 
-const IndexPage = ({ images }) => {
+const IndexPage = ({ image }) => {
   const [quote, setQuote] = useState(0);
+  const [position, setPosition] = useState(BOTTOM);
 
   useEffect(() => {
-    getQuotes('motivacao').then((response) => {
-      const randomIndex = Math.floor(Math.random() * (499 - 0))
-      setQuote(response.frases[randomIndex])
+    getQuotes().then((response) => {
+      const randomIndex = Math.floor(Math.random() * (response.length - 0))
+      setQuote(response[randomIndex])
     });
   }, []);
 
+  const changePositionToTop = () => {
+    setPosition(TOP);
+  }
+
+  const changePositionToBottom = () => {
+    setPosition(BOTTOM);
+  }
+
   return(<>
-    {images.map((image, index) => <img key={index} src={image.thumbnail}/>)}
-    <p>{quote.texto}</p>
+    <section className='frame'>
+      <img className='frame--image' src={image}/>
+
+      <blockquote className={`frame--quote ${position}`}>
+        <p>{quote.quote}</p>
+        <cite>{quote.author}</cite>
+      </blockquote>
+    </section>
+
+    <section className='controls'>
+      <p>Position</p>
+      <div>
+        <input type="radio" id="top" name="position" value="top" onClick={changePositionToTop}/>
+        <label htmlFor="top">Top</label>
+      </div>
+      <div>
+        <input type="radio" id="bottom" name="position" value="bottom" onClick={changePositionToBottom}/>
+        <label htmlFor="bottom">Bottom</label>
+      </div>
+    </section>
   </>)
 }
 
