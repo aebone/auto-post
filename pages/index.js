@@ -1,11 +1,12 @@
 import React, { useEffect, useState, useRef} from 'react'
-import html2canvas from "html2canvas";
+import html2canvas from "html2canvas"
 
 import { getAlbum } from '../pages/api/googlePhotos'
 import { getQuotes } from '../pages/api/quotes'
 
-const TOP = 'frame--quote-top '
-const BOTTOM = 'frame--quote-bottom '
+const ALBUM_ID = 'p8WidirJAC8pHgKr7'
+const TOP = 'frame--quote-top'
+const BOTTOM = 'frame--quote-bottom'
 
 export const getStaticProps = async () => {
   const album = await getAlbum(process.env.ALBUM_ID)
@@ -41,14 +42,30 @@ const IndexPage = ({ image }) => {
   }
 
   const onCapture = () => {
-      html2canvas(frameRef.current, {allowTaint: true}).then(function(canvas) {
-        document.body.appendChild(canvas);
-      });
-   }
+    html2canvas(frameRef.current, {allowTaint: true, useCORS: true}).then(function(canvas) {
+      saveAs(canvas.toDataURL(), 'post.png');
+    });
+  }
 
-   console.log(frameRef);
+  function saveAs(uri, filename) {
 
-  return(<>
+    var link = document.createElement('a');
+
+    if (typeof link.download === 'string') {
+      link.href = uri;
+      link.download = filename;
+      //Firefox requires the link to be in the body
+      document.body.appendChild(link);
+      //simulate click
+      link.click();
+      //remove the link when done
+      document.body.removeChild(link);
+    } else {
+      window.open(uri);
+    }
+  }
+
+  return (<>
     <section ref={frameRef} className='frame'>
       <img className='frame--image' src={image}/>
 
@@ -59,17 +76,20 @@ const IndexPage = ({ image }) => {
     </section>
 
     <section className='controls'>
-      <p>Position</p>
-      <div>
-        <input type="radio" id="top" name="position" value="top" onClick={changePositionToTop}/>
-        <label htmlFor="top">Top</label>
+      <div className='column'>
+        <p>Quote position:</p>
+        <div>
+          <input checked={position===TOP} type="radio" id="top" name="position" value="top" onChange={changePositionToTop}/>
+          <label htmlFor="top">Top</label>
+        </div>
+        <div>
+          <input checked={position===BOTTOM} type="radio" id="bottom" name="position" value="bottom" onChange={changePositionToBottom}/>
+          <label htmlFor="bottom">Bottom</label>
+        </div>
       </div>
-      <div>
-        <input type="radio" id="bottom" name="position" value="bottom" onClick={changePositionToBottom}/>
-        <label htmlFor="bottom">Bottom</label>
+      <div className='column'>
+        <button onClick={onCapture}>Download</button>
       </div>
-
-      <button onClick={onCapture}>Download</button>
     </section>
   </>)
 }
