@@ -10,20 +10,18 @@ const BOTTOM = 'frame--quote-bottom'
 
 export const getStaticProps = async () => {
   const album = await getAlbum(ALBUM_ID)
-  const randomIndex = Math.floor(Math.random() * (album.length - 0))
-  
-  const image = album[randomIndex]
 
   return {
     props: {
-      image
+      album
     }
   }
 }
 
-const IndexPage = ({ image }) => {
+const IndexPage = ({ album }) => {
   const [quote, setQuote] = useState(0);
   const [position, setPosition] = useState(BOTTOM);
+  const [image, setImage] = useState('');
   const frameRef = useRef();
 
   useEffect(() => {
@@ -31,7 +29,14 @@ const IndexPage = ({ image }) => {
       const randomIndex = Math.floor(Math.random() * (response.length - 0))
       setQuote(response[randomIndex])
     });
+
+    getRandomImage();
   }, []);
+
+  const getRandomImage = () => {
+    const randomIndex = Math.floor(Math.random() * (album.length - 0))
+    setImage(album[randomIndex])
+  }
 
   const changePositionToTop = () => {
     setPosition(TOP);
