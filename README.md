@@ -1,1 +1,0 @@
-Add the ALBUM_ID in the .env file.

@@ -9,7 +9,7 @@ const TOP = 'frame--quote-top'
 const BOTTOM = 'frame--quote-bottom'
 
 export const getStaticProps = async () => {
-  const album = await getAlbum(process.env.ALBUM_ID)
+  const album = await getAlbum(ALBUM_ID)
   const randomIndex = Math.floor(Math.random() * (album.length - 0))
   
   const image = album[randomIndex]
