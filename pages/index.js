@@ -73,7 +73,6 @@ const IndexPage = ({ album }) => {
   return (<>
     <section ref={frameRef} className='frame'>
       <img className='frame--image' src={image}/>
-
       <blockquote className={`frame--quote ${position}`}>
         <p>{quote.quote}</p>
         <cite>{quote.author}</cite>
@@ -94,6 +93,20 @@ const IndexPage = ({ album }) => {
       </div>
       <div className='column'>
         <button onClick={onCapture}>Download</button>
+      </div>
+    </section>
+
+    <section className='controls'>
+      <div className='column'>
+        <p>"{quote.quote}"</p>
+        <br/>
+        <p>{quote.author !== '-' ? '- ' + quote.author : ''}</p>
+        <br/>.
+        <br/>.
+        <br/>.
+        <p>
+          #gatos #motivação #gatosfofos #gatosdoinstagram #gatoslindos #amogatos #loucosporgatos #memesdegatos #frasesdemotivação #motivaçãododia #gatosinstagram #gatosengraçados #gatosgraciosos #gatosdobrasil #goodvibes #boasvibracoes
+        </p>
       </div>
     </section>
   </>)
