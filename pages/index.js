@@ -98,7 +98,7 @@ const IndexPage = ({ album }) => {
 
     <section className='controls'>
       <div className='column'>
-        <p>"{quote.quote}"</p>
+        <p>&quot;{quote.quote}&quot;</p>
         <br/>
         <p>{quote.author !== '-' ? '- ' + quote.author : ''}</p>
         <br/>.
